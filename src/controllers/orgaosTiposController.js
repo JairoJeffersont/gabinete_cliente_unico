@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const OrgaoTipo = require('../models/orgaos_tipos');
 const Usuario = require('../models/usuarios');
 
@@ -6,10 +5,10 @@ const Usuario = require('../models/usuarios');
 exports.getAllOrgaosTipos = async (req, res) => {
     try {
 
-        const usuario_id = req.query.usuario_id
+        const cliente_id = req.query.cliente_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
 
         const orgaosTipos = await OrgaoTipo.findAll({
@@ -19,7 +18,7 @@ exports.getAllOrgaosTipos = async (req, res) => {
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
@@ -32,7 +31,7 @@ exports.getAllOrgaosTipos = async (req, res) => {
         return res.status(200).json({ status: 200, message: orgaosTipos.length + ' tipos(s) encontrado(s)', dados: orgaosTipos });
 
     } catch (error) {
-        return res.status(500).json({ status: 500, message: 'Erro interno do servidor' });
+        return res.status(500).json({ status: 500, message: error.message });
     }
 };
 
@@ -68,8 +67,9 @@ exports.createOrgaoTipo = async (req, res) => {
         }
 
         if (error.name === 'SequelizeForeignKeyConstraintError') {
-            return res.status(422).json({ status: 422, message: 'Usuário não enontrado' });
+            return res.status(422).json({ status: 422, message: 'Usuário não encontrado' });
         }
+
         console.log(error);
         return res.status(500).json({ status: 500, message: 'Erro interno do servidor' });
     }
@@ -78,24 +78,28 @@ exports.createOrgaoTipo = async (req, res) => {
 exports.getOrgaoTipoById = async (req, res) => {
     try {
 
-        const usuario_id = req.query.usuario_id
+        const cliente_id = req.query.cliente_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
 
         const orgaoTipo = await OrgaoTipo.findByPk(req.params.id, {
+            where: {
+                orgao_tipo_id: req.params.id
+            },
             include: [
                 {
                     model: Usuario,
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
         });
+
         if (orgaoTipo) {
             return res.status(200).json({ status: 200, message: 'tipos encontrado', dados: orgaoTipo });
         }
@@ -106,32 +110,13 @@ exports.getOrgaoTipoById = async (req, res) => {
     }
 };
 
-exports.updateOrgaoTipo = async (req, res) => {
-    try {
-        const orgaoTipo = await OrgaoTipo.findByPk(req.params.id);
-        if (orgaoTipo) {
-            await orgaoTipo.update(req.body);
-            return res.status(201).json({ status: 201, message: 'Tpo de órgão atualizado com sucesso.', dados: orgaoTipo });
-        }
-
-        return res.status(200).json({ status: 200, message: 'Tipo de órgão não encontrado' });
-
-    } catch (error) {
-        if (error.name === 'SequelizeDatabaseError') {
-            return res.status(422).json({ status: 422, message: 'Um ou mais campos têm o tipo de dado incorreto.' });
-        }
-
-        return res.status(500).json({ status: 500, message: 'Erro interno do servidor' });
-    }
-};
-
 exports.deleteOrgaoTipo = async (req, res) => {
     try {
 
-        const usuario_id = req.query.usuario_id
+        const cliente_id = req.query.cliente_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
 
         const orgaoTipo = await OrgaoTipo.findByPk(req.params.id, {
@@ -141,7 +126,7 @@ exports.deleteOrgaoTipo = async (req, res) => {
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
@@ -155,6 +140,43 @@ exports.deleteOrgaoTipo = async (req, res) => {
         if (error.name === 'SequelizeForeignKeyConstraintError') {
             return res.status(409).json({ status: 409, message: 'Esse tipo de órgão não pode ser apagado.' });
         }
+        return res.status(500).json({ status: 500, message: error.message });
+    }
+};
+
+exports.updateOrgaoTipo = async (req, res) => {
+    try {
+
+        const cliente_id = req.query.cliente_id
+
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
+        }
+        const orgaoTipo = await OrgaoTipo.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Usuario,
+                    as: 'Usuario',
+                    attributes: ['usuario_nome'],
+                    where: {
+                        usuario_cliente: cliente_id
+                    }
+                }
+            ]
+        });
+
+        if (orgaoTipo) {
+            await orgaoTipo.update(req.body);
+            return res.status(201).json({ status: 201, message: 'Tpo de órgão atualizado com sucesso.', dados: orgaoTipo });
+        }
+
+        return res.status(200).json({ status: 200, message: 'Tipo de órgão não encontrado' });
+
+    } catch (error) {
+        if (error.name === 'SequelizeDatabaseError') {
+            return res.status(422).json({ status: 422, message: 'Um ou mais campos têm o tipo de dado incorreto.' });
+        }
+
         return res.status(500).json({ status: 500, message: 'Erro interno do servidor' });
     }
 };

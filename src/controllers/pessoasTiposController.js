@@ -4,13 +4,12 @@ const PessoaTipo = require('../models/pessoas_tipos');
 const Usuario = require('../models/usuarios');
 
 
-
 exports.getAllPessoasTipos = async (req, res) => {
     try {
-        const usuario_id = req.query.usuario_id
+        const cliente_id = req.query.cliente_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
 
         const pessoasTipos = await PessoaTipo.findAll({
@@ -20,7 +19,7 @@ exports.getAllPessoasTipos = async (req, res) => {
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
@@ -67,7 +66,7 @@ exports.createPessoaTipo = async (req, res) => {
         }
 
         if (error.name === 'SequelizeForeignKeyConstraintError') {
-            return res.status(422).json({ status: 422, message: 'Usuário não enontrado' });
+            return res.status(422).json({ status: 422, message: 'Usuário não encontrado' });
         }
 
         return res.status(500).json({ status: 500, message: error });
@@ -77,11 +76,12 @@ exports.createPessoaTipo = async (req, res) => {
 exports.getPessoaTipoById = async (req, res) => {
     try {
 
-        const usuario_id = req.query.usuario_id
+        const cliente_id = req.query.cliente_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
+
 
         const pessoaTipo = await PessoaTipo.findByPk(req.params.id, {
             include: [
@@ -90,7 +90,7 @@ exports.getPessoaTipoById = async (req, res) => {
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
@@ -108,10 +108,11 @@ exports.getPessoaTipoById = async (req, res) => {
 exports.updatePessoaTipo = async (req, res) => {
     try {
 
-        const usuario_id = req.query.usuario_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        const cliente_id = req.query.cliente_id
+
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
 
         const pessoaTipo = await PessoaTipo.findByPk(req.params.id, {
@@ -121,7 +122,7 @@ exports.updatePessoaTipo = async (req, res) => {
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
@@ -143,10 +144,10 @@ exports.updatePessoaTipo = async (req, res) => {
 exports.deletePessoaTipo = async (req, res) => {
     try {
 
-        const usuario_id = req.query.usuario_id
+        const cliente_id = req.query.cliente_id
 
-        if (!usuario_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do usuário não foi enviado' });
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
         }
 
         const pessoaTipo = await PessoaTipo.findByPk(req.params.id, {
@@ -156,7 +157,7 @@ exports.deletePessoaTipo = async (req, res) => {
                     as: 'Usuario',
                     attributes: ['usuario_nome'],
                     where: {
-                        usuario_cliente: usuario_id
+                        usuario_cliente: cliente_id
                     }
                 }
             ]
