@@ -9,6 +9,10 @@ const clientesRoutes = require('./clientesRoutes');
 const orgaosTiposRoutes = require('./orgaosTiposRoutes');
 const orgaosRoutes = require('./OrgaosRoutes');
 const pessoasTiposRoutes = require('./pessoasTiposRoutes');
+const loginRoutes = require('./loginRoutes');
+router.use('/login', loginRoutes);
+
+
 
 
 

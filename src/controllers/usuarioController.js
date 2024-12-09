@@ -7,20 +7,23 @@ const logger = require('../middleware/logger');
 exports.getUsuarios = async (req, res) => {
     try {
 
-        const cliente_id = req.query.cliente_id
+        const cliente_id = req.query.cliente_id || null
 
-        if (!cliente_id) {
-            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
+        let whereCliente = {};
+
+        if (cliente_id) {
+            whereCliente = {
+                usuario_cliente: cliente_id
+            };
         }
 
         const usuarios = await Usuario.findAll({
             attributes: {
                 exclude: ['usuario_senha'],
             },
-            where: {
-                usuario_cliente: cliente_id
-            },
+            where: whereCliente,
         });
+
 
         if (usuarios.length === 0) {
             return res.status(200).json({ status: 200, message: 'Nenhum usuário encontrado' });
@@ -111,7 +114,6 @@ exports.createUsuario = async (req, res) => {
     try {
 
         const { usuario_nome, usuario_email, usuario_telefone, usuario_senha, usuario_ativo, usuario_aniversario, usuario_cliente } = req.body;
-
 
         if (!usuario_nome || !usuario_email || !usuario_telefone || !usuario_senha || usuario_ativo === undefined || !usuario_aniversario || !usuario_cliente) {
             return res.status(400).json({ status: 400, message: 'Todos os campos são obrigatórios.' });
