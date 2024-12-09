@@ -1,11 +1,8 @@
-
 const Usuario = require('../models/usuarios');
 const Cliente = require('../models/clientes');
 const argon2 = require('argon2');
 const logger = require('../middleware/logger');
 const { Op } = require('sequelize');
-
-
 
 
 exports.getUsuarios = async (req, res) => {
@@ -85,7 +82,7 @@ exports.createUsuario = async (req, res) => {
 
 
         if (!usuario_nome || !usuario_email || !usuario_telefone || !usuario_senha || usuario_ativo === undefined || !usuario_aniversario || !usuario_cliente) {
-            return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+            return res.status(400).json({ status:400, message: 'Todos os campos são obrigatórios.' });
         }
 
         const cliente = await Cliente.findByPk(usuario_cliente);

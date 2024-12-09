@@ -8,7 +8,6 @@ const { Op } = require('sequelize');
 
 exports.getClientes = async (req, res) => {
     try {
-
         const clientes = await Cliente.findAll({
             where: {
                 cliente_id: {
@@ -101,7 +100,7 @@ exports.createCliente = async (req, res) => {
         });
 
         const clienteId = cliente.cliente_id;
-        const folderPath = path.join(__dirname, '..', '..', 'public', 'arquivos', String(clienteId));  // Caminho para a raiz do projeto
+        const folderPath = path.join(__dirname, '..', '..', 'public', 'arquivos', String(clienteId));
 
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
