@@ -7,41 +7,59 @@ const { Op } = require('sequelize');
 
 exports.getUsuarios = async (req, res) => {
     try {
+
+        const cliente_id = req.query.cliente_id
+
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
+        }
+
         const usuarios = await Usuario.findAll({
             attributes: {
                 exclude: ['usuario_senha'],
             },
             where: {
-                usuario_id: {
-                    [Op.ne]: 1
-                }
+                usuario_cliente: cliente_id
             },
-            include: [
-                {
-                    model: Cliente,
-                    as: 'cliente',
-                    attributes: ['cliente_nome', 'cliente_email', 'cliente_telefone', 'cliente_ativo'],
-                },
-            ],
         });
 
         if (usuarios.length === 0) {
             return res.status(200).json({ status: 200, message: 'Nenhum usuário encontrado' });
         }
-        const { usuario_senha, ...usuarioSemSenha } = usuarios.toJSON();
 
-        return res.status(200).json({ status: 200, message: usuarios.length + ' usuário(s) encontrado(s)', dados: usuarioSemSenha });
+        const usuariosSemSenha = usuarios.map(usuario => {
+            const { usuario_senha, ...usuarioSemSenha } = usuario.toJSON();
+            return usuarioSemSenha;
+        });
+
+        return res.status(200).json({ status: 200, message: `${usuarios.length} usuário(s) encontrado(s)`, dados: usuariosSemSenha });
     } catch (error) {
         logger.error('Ocorreu um erro: ' + error.message);
-        return res.status(500).json({ status: 500, message: 'Erro interno do servidor' });
+        return res.status(500).json({ status: 500, message: error.message });
     }
 };
 
 exports.findUsuario = async (req, res) => {
     try {
+
+        const cliente_id = req.query.cliente_id
+
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
+        }
+
         const { id } = req.params;
 
-        const usuario = await Usuario.findByPk(id);
+        const usuario = await Usuario.findOne({
+            attributes: {
+                exclude: ['usuario_senha'],
+            },
+            where: {
+                usuario_id: id,
+                usuario_cliente: cliente_id
+            },
+        });
+
 
         if (!usuario) {
             return res.status(404).json({ error: 'Usuário não encontrado' });
@@ -58,8 +76,23 @@ exports.findUsuario = async (req, res) => {
 
 exports.deleteUsuario = async (req, res) => {
     try {
+
+        const cliente_id = req.query.cliente_id
+
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
+        }
+
         const { id } = req.params;
-        const usuario = await Usuario.findByPk(id);
+        const usuario = await Usuario.findOne({
+            attributes: {
+                exclude: ['usuario_senha'],
+            },
+            where: {
+                usuario_id: id,
+                usuario_cliente: cliente_id
+            },
+        });
         if (!usuario) {
             return res.status(404).json({ status: 404, message: 'Esse usuário não encontrado.' });
         }
@@ -82,7 +115,7 @@ exports.createUsuario = async (req, res) => {
 
 
         if (!usuario_nome || !usuario_email || !usuario_telefone || !usuario_senha || usuario_ativo === undefined || !usuario_aniversario || !usuario_cliente) {
-            return res.status(400).json({ status:400, message: 'Todos os campos são obrigatórios.' });
+            return res.status(400).json({ status: 400, message: 'Todos os campos são obrigatórios.' });
         }
 
         const cliente = await Cliente.findByPk(usuario_cliente);
@@ -135,7 +168,21 @@ exports.updateUsuario = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const usuario = await Usuario.findByPk(id);
+        const cliente_id = req.query.cliente_id
+
+        if (!cliente_id) {
+            return res.status(400).json({ status: 400, message: 'O ID do cliente não foi enviado' });
+        }
+
+        const usuario = await Usuario.findOne({
+            attributes: {
+                exclude: ['usuario_senha'],
+            },
+            where: {
+                usuario_id: id,
+                usuario_cliente: cliente_id
+            },
+        });
 
         if (!usuario) {
             return res.status(404).json({ error: 'Usuário não encontrado' });
