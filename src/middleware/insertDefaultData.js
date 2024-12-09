@@ -2,9 +2,7 @@ const Usuario = require('../models/usuarios');
 const Cliente = require('../models/clientes');
 const OrgaosTipos = require('../models/orgaos_tipos');
 const PessoasTipos = require('../models/pessoas_tipos');
-
-
-
+const  Orgaos  = require('../models/orgaos');
 
 const insertDefaultData = async () => {
   try {
@@ -52,6 +50,18 @@ const insertDefaultData = async () => {
         pessoa_tipo_nome: 'Sem tipo definido',
         pessoa_tipo_descricao: 'Sem tipo definido',
         pessoa_tipo_criado_por: 1,
+      },
+    });
+
+    await Orgaos.findOrCreate({
+      where: { orgao_id: 1 },
+      defaults: {
+        orgao_nome: 'Órgão não informado',
+        orgao_email: 'email@email',
+        orgao_municipio: 'municipio',
+        orgao_estado: 'estado',
+        orgao_tipo: 1,
+        orgao_criado_por: 1,
       },
     });
 

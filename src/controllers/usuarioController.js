@@ -2,7 +2,6 @@ const Usuario = require('../models/usuarios');
 const Cliente = require('../models/clientes');
 const argon2 = require('argon2');
 const logger = require('../middleware/logger');
-const { Op } = require('sequelize');
 
 
 exports.getUsuarios = async (req, res) => {
