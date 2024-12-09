@@ -7,12 +7,15 @@ const logger = require('../middleware/logger');
 const usuarioRoutes = require('./usuarioRoutes');
 const clientesRoutes = require('./clientesRoutes');
 const orgaosTiposRoutes = require('./orgaosTiposRoutes');
+const orgaosRoutes = require('./OrgaosRoutes');
 const pessoasTiposRoutes = require('./pessoasTiposRoutes');
+
 
 
 router.use('/usuarios', usuarioRoutes);
 router.use('/clientes', clientesRoutes);
 router.use('/tipos-orgaos', orgaosTiposRoutes);
+router.use('/orgaos', orgaosRoutes);
 router.use('/tipos-pessoas', pessoasTiposRoutes);
 
 

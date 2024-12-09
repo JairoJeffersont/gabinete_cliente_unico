@@ -1,0 +1,2 @@
+2024-12-09 13:33:33 error: Erro sync db: Can't create table `nodejs`.`orgaos` (errno: 150 "Foreign key constraint is incorrectly formed")
+2024-12-09 13:33:47 error: Erro sync db: Can't create table `nodejs`.`orgaos` (errno: 150 "Foreign key constraint is incorrectly formed")
