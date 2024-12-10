@@ -25,7 +25,7 @@ router.use('/tipos-pessoas', pessoasTiposRoutes);
 
 router.use((req, res) => {
     logger.info(`Rota não encontrada. Método: ${req.method}, URL: ${req.originalUrl}`);
-    res.status(404).json({ error: 'Rota não encontrada' });
+    return res.status(404).json({ status: 404, message: 'Rota não encontrada' });
 });
 
 module.exports = router;

@@ -1,2 +1,15 @@
 2024-12-09 13:33:33 error: Erro sync db: Can't create table `nodejs`.`orgaos` (errno: 150 "Foreign key constraint is incorrectly formed")
 2024-12-09 13:33:47 error: Erro sync db: Can't create table `nodejs`.`orgaos` (errno: 150 "Foreign key constraint is incorrectly formed")
+2024-12-09 14:29:41 info: Rota não encontrada. Método: GET, URL: /api/login
+2024-12-09 14:29:55 info: Rota não encontrada. Método: GET, URL: /api//login
+2024-12-09 14:29:57 info: Rota não encontrada. Método: GET, URL: /api//login
+2024-12-09 15:49:25 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:49:29 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:49:43 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:49:57 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:50:15 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:50:31 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:50:40 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:51:43 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:51:54 info: Rota não encontrada. Método: GET, URL: /api/usuasrios
+2024-12-09 15:51:59 info: Rota não encontrada. Método: GET, URL: /api/usuasrios

@@ -26,7 +26,7 @@ exports.getUsuarios = async (req, res) => {
 
 
         if (usuarios.length === 0) {
-            return res.status(200).json({ status: 200, message: 'Nenhum usuário encontrado' });
+            return res.status(200).json({ status: 204, message: 'Nenhum usuário encontrado' });
         }
 
         const usuariosSemSenha = usuarios.map(usuario => {

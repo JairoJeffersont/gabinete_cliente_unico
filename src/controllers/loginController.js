@@ -33,13 +33,13 @@ exports.login = async (req, res) => {
         const usuario = await Usuario.findOne({ where: { usuario_email: email } });
 
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuário não encontrado' });
+            return res.status(404).json({ status: 404, message: 'Usuário não encontrado' });
         }
 
         // Verifica se a senha está correta
         const senhaCorreta = await argon2.verify(usuario.usuario_senha, senha);
         if (!senhaCorreta) {
-            return res.status(401).json({ error: 'Senha incorreta' });
+            return res.status(401).json({ status: 401, message: 'Senha Incorreta' });
         }
 
         if (!usuario.usuario_ativo) {
@@ -65,9 +65,10 @@ exports.login = async (req, res) => {
             email: usuario.usuario_email,
             nivel: usuario.usuario_nivel,
             id: usuario.usuario_id,
-            token: token
+            token: token,
+            cliente_id: usuario.usuario_cliente
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, message: 'Erro interno do servidor' });
     }
 };
