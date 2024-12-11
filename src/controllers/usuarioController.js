@@ -60,7 +60,7 @@ exports.findUsuario = async (req, res) => {
 
 
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuário não encontrado' });
+            return res.status(404).json({ status: 404, message: 'Usuário não encontrado' });
         }
 
         const { usuario_senha, ...usuarioSemSenha } = usuario.toJSON();
