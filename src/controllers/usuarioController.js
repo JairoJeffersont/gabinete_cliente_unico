@@ -2,28 +2,24 @@ const Usuario = require('../models/usuarios');
 const Cliente = require('../models/clientes');
 const argon2 = require('argon2');
 const logger = require('../middleware/logger');
+const { Op } = require('sequelize');
+
 
 
 exports.getUsuarios = async (req, res) => {
     try {
 
-        const cliente_id = req.query.cliente_id || null
+        const cliente_id = req.query.cliente_id || null;
 
-        let whereCliente = {};
-
-        if (cliente_id) {
-            whereCliente = {
-                usuario_cliente: cliente_id
-            };
-        }
+        const whereCliente = {
+            usuario_id: { [Op.ne]: 1 },
+            ...(cliente_id && { usuario_cliente: cliente_id })
+        };
 
         const usuarios = await Usuario.findAll({
-            attributes: {
-                exclude: ['usuario_senha'],
-            },
-            where: whereCliente,
+            attributes: { exclude: ['usuario_senha'] },
+            where: whereCliente
         });
-
 
         if (usuarios.length === 0) {
             return res.status(200).json({ status: 204, message: 'Nenhum usuário encontrado' });
@@ -133,7 +129,8 @@ exports.createUsuario = async (req, res) => {
 
         if (quantidadeUsuarios >= clienteAssinaturas) {
             return res.status(400).json({
-                error: 'Limite de usuários atingido para esse cliente. Não é possível cadastrar mais usuários.'
+                status: 400,
+                message: 'Limite de usuários atingido para esse cliente. Não é possível cadastrar mais usuários.'
             });
         }
 
@@ -150,7 +147,7 @@ exports.createUsuario = async (req, res) => {
         const usuarioSemSenha = novoUsuario.get({ plain: true });
         delete usuarioSemSenha.usuario_senha;
 
-        return res.status(201).json({ status: 201, message: 'Usuário criado com sucesso.', dados: usuarioSemSenha });
+        return res.status(200).json({ status: 200, message: 'Usuário criado com sucesso.', dados: usuarioSemSenha });
 
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {

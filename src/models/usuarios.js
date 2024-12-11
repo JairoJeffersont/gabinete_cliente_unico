@@ -31,7 +31,7 @@ const Usuario = sequelize.define('Usuario', {
     defaultValue: true,
   },
   usuario_aniversario: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
   usuario_cliente: {

@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         }
 
         if (!usuario.usuario_ativo) {
-            return res.status(401).json({ error: 'Usuário desativado' });
+            return res.status(401).json({ status: 401, message: 'Usuário desativado' });
         }
 
         // Gera um token JWT com dados do usuário no payload
